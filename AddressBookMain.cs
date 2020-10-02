@@ -108,5 +108,21 @@ namespace AddressBookSystem
                 }
             }
         }
+        /// <summary>
+        /// Deletes the contact.
+        /// </summary>
+        /// <param name="firstName">The first name.</param>
+        /// <param name="lastName">The last name.</param>
+        public void deleteContact(string firstName, string lastName)
+        {
+            for (int i = 0; i < contactList.Count; i++)
+            {
+                if (firstName == contactList[i].firstName && lastName == contactList[i].lastName)
+                {
+                    contactList.RemoveAt(i);
+                    Console.WriteLine("\nContact {0} {1} deleted successfully", firstName, lastName);
+                }
+            }
+        }
     }
 }
