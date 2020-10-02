@@ -6,6 +6,7 @@ namespace AddressBookSystem
 {
     class AddressBookMain
     {
+        private readonly NLog nLog = new NLog();
         public static List<Contact> contactList = new List<Contact>();
         /// <summary>
         /// Adds the new contact.
@@ -45,7 +46,14 @@ namespace AddressBookSystem
                 }
             }
             if (flag == true)
+            {
+                //Log Warning to enter already existing contact
+                nLog.LogWarning("Warning: To view the contact it must already exist");
+                //Log Error to show that entered contact does not exist
+                nLog.LogError("Error: Contact does not exist");
                 Console.WriteLine("Contact not found");
+            }
+                
         }
         /// <summary>
         /// Edits the contact.
@@ -66,6 +74,8 @@ namespace AddressBookSystem
                         int updatePointer = Convert.ToInt32(Console.ReadLine());
                         if (updatePointer == 9)
                         {
+                            //Log record if no edits or updates are done
+                            nLog.LogInfo("INFO: editContact() passed but no change noticed : " + firstName + " " + lastName);                            
                             break;
                         }
                         Console.WriteLine("Enter the new value");
@@ -102,9 +112,9 @@ namespace AddressBookSystem
                                 flag = false;
                                 break;
                         }
+                        Console.WriteLine("Contact details updated successfully");
                     }
-
-                    Console.WriteLine("Contact details updated successfully");
+                    
                 }
             }
         }
@@ -120,6 +130,8 @@ namespace AddressBookSystem
                 if (firstName == contactList[i].firstName && lastName == contactList[i].lastName)
                 {
                     contactList.RemoveAt(i);
+                    //Log record to show that the contact is deleted
+                    nLog.LogInfo("deleteContact() passed: to delete : " + firstName+" "+lastName);
                     Console.WriteLine("\nContact {0} {1} deleted successfully", firstName, lastName);
                 }
             }
