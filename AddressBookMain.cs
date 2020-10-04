@@ -7,34 +7,53 @@ namespace AddressBookSystem
     class AddressBookMain
     {
         private readonly NLog nLog = new NLog();
-        public static List<Contact> contactList = new List<Contact>();
-        /// <summary>
-        /// Adds the new contact.
-        /// </summary>
-        /// <param name="firstName">The first name.</param>
-        /// <param name="lastName">The last name.</param>
-        /// <param name="address">The address.</param>
-        /// <param name="city">The city.</param>
-        /// <param name="state">The state.</param>
-        /// <param name="zip">The zip.</param>
-        /// <param name="phoneNumber">The phone number.</param>
-        /// <param name="email">The email.</param>
-        public void addNewContact(string firstName, string lastName, string address, string city, string state, double zip, double phoneNumber, string email)
+        public List<Contact> contactList = new List<Contact>();
+        string addressBookName;
+
+        public AddressBookMain(string addressBookName)
         {
+            this.addressBookName = addressBookName;
+        }
+       
+        public void addNewContact()
+        {
+            Console.WriteLine("Enter first name");
+            string firstName = Console.ReadLine();
+
+            Console.WriteLine("Enter last name");
+            string lastName = Console.ReadLine();
+
+            Console.WriteLine("Enter address");
+            string address = Console.ReadLine();
+
+            Console.WriteLine("Enter city name");
+            string city = Console.ReadLine();
+
+            Console.WriteLine("Enter state");
+            string state = Console.ReadLine();
+
+            Console.WriteLine("Enter zip");
+            double zip = Convert.ToDouble(Console.ReadLine());
+
+            Console.WriteLine("Enter phone number");
+            double phoneNumber = Convert.ToDouble(Console.ReadLine());
+
+            Console.WriteLine("Enter email");
+            string email = Console.ReadLine();
             Contact contact = new Contact(firstName, lastName, address, city, state, zip, phoneNumber, email);
 
             contactList.Add(contact);
             Console.WriteLine("Contact " + firstName + " " + lastName + " added successfully");
 
         }
-        /// <summary>
-        /// Views the contact.
-        /// </summary>
-        /// <param name="firstName">The first name.</param>
-        /// <param name="lastName">The last name.</param>
-        public void viewContact(string firstName, string lastName)
+        
+        public void viewContact()
         {
             bool flag = true;
+            Console.WriteLine("Enter the first name of contact you want to view");
+            string firstName = Console.ReadLine();
+            Console.WriteLine("Enter the last name of contact you want to view");
+            string lastName = Console.ReadLine();
             Console.WriteLine("\nDetails of " + firstName + " " + lastName + ":");
             foreach (var v in contactList)
             {
@@ -47,28 +66,30 @@ namespace AddressBookSystem
             }
             if (flag == true)
             {
+                Console.WriteLine("Contact not found");
                 //Log Warning to enter already existing contact
                 nLog.LogWarning("Warning: To view the contact it must already exist");
                 //Log Error to show that entered contact does not exist
                 nLog.LogError("Error: Contact does not exist");
-                Console.WriteLine("Contact not found");
+                
             }
                 
         }
-        /// <summary>
-        /// Edits the contact.
-        /// </summary>
-        /// <param name="firstName">The first name.</param>
-        /// <param name="lastName">The last name.</param>
-        public void editContact(string firstName, string lastName)
+       
+        public void editContact()
         {
+            bool flag1 = true;
+            Console.WriteLine("Enter first name of the contact to edit");
+            string firstName = Console.ReadLine();
+            Console.WriteLine("Enter last name");
+            string lastName = Console.ReadLine();
             foreach (var v in contactList)
             {
                 if (firstName == v.firstName && lastName == v.lastName)
                 {
                     Console.WriteLine("\nTo edit contact details of " + firstName + " " + lastName + " enter:");
-                    bool flag = true;
-                    while (flag)
+                    bool flag2 = true;
+                    while (flag2)
                     {
                         Console.WriteLine("1-To update first name\n2-To update last name\n3-To update address\n4-To update city\n5-To update state\n6-To update zip\n7-To update phone number\n8-To update email\n9-To exit edit portal and save updates");
                         int updatePointer = Convert.ToInt32(Console.ReadLine());
@@ -109,22 +130,27 @@ namespace AddressBookSystem
                                 v.email = newValue;
                                 break;
                             case 9:
-                                flag = false;
+                                flag2 = false;
                                 break;
                         }
                         Console.WriteLine("Contact details updated successfully");
+                        flag1 = false;
                     }
                     
                 }
             }
+            if(flag1==true)
+                Console.WriteLine("Error:Contact not found");
+
         }
-        /// <summary>
-        /// Deletes the contact.
-        /// </summary>
-        /// <param name="firstName">The first name.</param>
-        /// <param name="lastName">The last name.</param>
-        public void deleteContact(string firstName, string lastName)
+        
+        public void deleteContact()
         {
+            bool flag = true;
+            Console.WriteLine("Enter the first name of contact you want to delete");
+            string firstName = Console.ReadLine();
+            Console.WriteLine("Enter the last name of contact you want to delete");
+            string lastName = Console.ReadLine();
             for (int i = 0; i < contactList.Count; i++)
             {
                 if (firstName == contactList[i].firstName && lastName == contactList[i].lastName)
@@ -133,8 +159,11 @@ namespace AddressBookSystem
                     //Log record to show that the contact is deleted
                     nLog.LogInfo("deleteContact() passed: to delete : " + firstName+" "+lastName);
                     Console.WriteLine("\nContact {0} {1} deleted successfully", firstName, lastName);
+                    flag = false;
                 }
             }
+            if(flag==true)
+                Console.WriteLine("Error:Contact not found");
         }
     }
 }
